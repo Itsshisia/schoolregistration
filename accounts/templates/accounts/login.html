@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-96">
+        <h2 class="text-2xl font-semibold text-center text-gray-700 mb-4">Login</h2>
+        {% if error_message %}
+            <div class="text-red-500 text-center mb-4">{{ error_message }}</div>
+        {% endif %}
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            <div class="relative">
+                <i class="fas fa-user absolute left-3 top-3 text-gray-400"></i>
+                <input type="text" name="username" placeholder="Username" required 
+                    class="w-full pl-10 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div class="relative">
+                <i class="fas fa-lock absolute left-3 top-3 text-gray-400"></i>
+                <input type="password" name="password" placeholder="Password" required 
+                    class="w-full pl-10 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md transition">Login</button>
+        </form>
+        <div class="text-center mt-4">
+            <a href="{% url 'accounts:signup' %}" class="text-blue-500 hover:underline">Don't have an account? Sign Up</a>
+        </div>
+        <div class="text-center mt-2">
+            <a href="{% url 'accounts:admin_login' %}" class="text-gray-600 hover:text-gray-800">Login as Admin</a>
+        </div>
+    </div>
+</body>
+</html>

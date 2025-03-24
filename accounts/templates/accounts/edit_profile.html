@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+        .action-dropdown {
+    position: relative;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 5px;
+}
+.action-dropdown:hover .dropdown-content {
+    display: block;
+}
+
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #1e293b;
+            color: #fff;
+            height: 100vh;
+            position: fixed;
+            transition: all 0.3s;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #2c3e50;
+        }
+
+        .sidebar-logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .sidebar-menu {
+            padding: 15px 0;
+        }
+
+        .sidebar-menu ul {
+            list-style: none;
+        }
+
+        .sidebar-menu ul li {
+            padding: 10px 25px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .sidebar-menu ul li:hover {
+            background: #2c3e50;
+            border-left: 4px solid #3498db;
+        }
+
+        .sidebar-menu ul li i {
+            margin-right: 10px;
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .sidebar-menu ul li span {
+            font-size: 15px;
+            color: white;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            transition: all 0.3s;
+        }
+
+        /* Header */
+        .header {
+            background: #ffffff;
+            height: 70px;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            background: #e2e8f0;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 18px;
+            height: 18px;
+            background: #e74c3c;
+            color: #fff;
+            border-radius: 50%;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Edit Profile Form */
+        .edit-profile-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .edit-profile-container h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+
+        .edit-profile-container h2 i {
+            margin-right: 10px;
+            color: #3498db;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        .form-group input[type="file"] {
+            padding: 8px;
+        }
+
+        .form-group button {
+            padding: 12px 24px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .form-group button:hover {
+            background-color: #2980b9;
+        }
+
+        .form-group .file-upload {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group .file-upload label {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .form-group .file-upload label:hover {
+            background-color: #2980b9;
+        }
+
+        .form-group .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .form-group .file-upload span {
+            font-size: 14px;
+            color: #777;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+                overflow: hidden;
+            }
+
+            .sidebar-logo {
+                font-size: 20px;
+            }
+
+            .sidebar-menu ul li span {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">EDU</div>
+        </div>
+        <div class="sidebar-menu">
+            <ul>
+                <li>
+                    <a href="{% url 'accounts:dashboard' %}">
+                        <i class="fas fa-user-edit"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:edit_profile' %}">
+                        <i class="fas fa-user-edit"></i>
+                        <span>Update Profile</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:course_enrollment' %}">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Course Enrollment</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:course_transfer' %}">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Course Transfer</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:submit_ticket' %}">
+                        <i class="fas fa-headset"></i>
+                        <span>Helpdesk</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:book_student_id' %}">
+                        <i class="fas fa-id-card"></i>
+                        <span>Book Student ID</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:fees_payment_details' %}">
+                        <i class="fas fa-money-bill"></i>
+                        <span>Fees Payment</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:logout' %}">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-title">Student Registration</div>
+            <div class="header-actions">
+                <div class="action-btn action-dropdown">
+                    <i class="fas fa-user"></i>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Profile Form -->
+        <div class="edit-profile-container">
+            <h2><i class="fas fa-user-edit"></i> Edit Profile</h2>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <!-- Personal Details -->
+                <div class="form-group">
+                    <label for="first_name">First Name</label>
+                    <input type="text" id="first_name" name="first_name" value="{{ student.first_name }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="last_name">Last Name</label>
+                    <input type="text" id="last_name" name="last_name" value="{{ student.last_name }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="date_of_birth">Date of Birth</label>
+                    <input type="date" id="date_of_birth" name="date_of_birth" value="{{ student.date_of_birth|default:'' }}">
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select id="gender" name="gender">
+                        <option value="Male" {% if student.gender == "Male" %}selected{% endif %}>Male</option>
+                        <option value="Female" {% if student.gender == "Female" %}selected{% endif %}>Female</option>
+                        <option value="Other" {% if student.gender == "Other" %}selected{% endif %}>Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="nationality">Nationality</label>
+                    <input type="text" id="nationality" name="nationality" value="{{ student.nationality|default:'' }}">
+                </div>
+                <div class="form-group">
+                    <label for="phone_number">Phone Number</label>
+                    <input type="text" id="phone_number" name="phone_number" value="{{ student.phone_number|default:'' }}">
+                </div>
+
+                <!-- Academic Information -->
+                <div class="form-group">
+                    <label for="previous_school">Previous School</label>
+                    <input type="text" id="previous_school" name="previous_school" value="{{ student.previous_school|default:'' }}">
+                </div>
+                <div class="form-group">
+                    <label for="enrollment_year">Enrollment Year</label>
+                    <input type="number" id="enrollment_year" name="enrollment_year" value="{{ student.enrollment_year|default:'' }}">
+                </div>
+                <div class="form-group">
+                    <label for="program_name">Program Name</label>
+                    <input type="text" id="program_name" name="program_name" value="{{ student.program_name|default:'' }}">
+                </div>
+
+                <!-- Document Uploads -->
+                <div class="form-group">
+                    <label>ID Document</label>
+                    <div class="file-upload">
+                        <label for="id_document"><i class="fas fa-upload"></i> Upload</label>
+                        <input type="file" id="id_document" name="id_document">
+                        <span>{{ student.id_document.name|default:"No file uploaded" }}</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Transcript</label>
+                    <div class="file-upload">
+                        <label for="transcript"><i class="fas fa-upload"></i> Upload</label>
+                        <input type="file" id="transcript" name="transcript">
+                        <span>{{ student.transcript.name|default:"No file uploaded" }}</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Medical documents/Next of Kin</label>
+                    <div class="file-upload">
+                        <label for="admission_letter"><i class="fas fa-upload"></i> Upload</label>
+                        <input type="file" id="admission_letter" name="admission_letter">
+                        <span>{{ student.admission_letter.name|default:"No file uploaded" }}</span>
+                    </div>
+                </div>
+
+                <!-- Save Button -->
+                <div class="form-group">
+                    <button type="submit"><i class="fas fa-save"></i> Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Simple script to adjust layout based on screen size
+        window.addEventListener('resize', function() {
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+            
+            if (window.innerWidth <= 768) {
+                sidebar.style.width = '70px';
+                mainContent.style.marginLeft = '70px';
+            } else {
+                sidebar.style.width = '250px';
+                mainContent.style.marginLeft = '250px';
+            }
+        });
+    </script>
+</body>
+</html>

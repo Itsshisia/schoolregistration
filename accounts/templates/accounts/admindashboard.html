@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+        .action-dropdown {
+    position: relative;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 5px;
+}
+.action-dropdown:hover .dropdown-content {
+    display: block;
+}
+
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #1e293b;
+            color: #fff;
+            height: 100vh;
+            position: fixed;
+            transition: all 0.3s;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #2c3e50;
+        }
+
+        .sidebar-logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .sidebar-menu {
+            padding: 15px 0;
+        }
+
+        .sidebar-menu ul {
+            list-style: none;
+        }
+
+        .sidebar-menu ul li {
+            padding: 10px 25px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .sidebar-menu ul li:hover {
+            background: #2c3e50;
+            border-left: 4px solid #3498db;
+        }
+
+        .sidebar-menu ul li i {
+            margin-right: 10px;
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .sidebar-menu ul li span {
+            font-size: 15px;
+            color: white;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            transition: all 0.3s;
+        }
+
+        /* Header */
+        .header {
+            background: #ffffff;
+            height: 70px;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            background: #e2e8f0;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 18px;
+            height: 18px;
+            background: #e74c3c;
+            color: #fff;
+            border-radius: 50%;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Dashboard Content */
+        .dashboard-container {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+
+        .profile-icon {
+            background: #3498db;
+        }
+
+        .course-icon {
+            background: #1abc9c;
+        }
+
+        .payment-icon {
+            background: #e74c3c;
+        }
+
+        .reports-icon {
+            background: #7f8c8d;
+        }
+
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .quick-actions button {
+            padding: 10px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .quick-actions button:hover {
+            background-color: #2980b9;
+        }
+
+        .quick-actions button i {
+            margin-right: 5px;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        table th, table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #f4f4f9;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+                overflow: hidden;
+            }
+
+            .sidebar-logo {
+                font-size: 20px;
+            }
+
+            .sidebar-menu ul li span {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 70px;
+            }
+
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">ADMIN</div>
+        </div>
+        <div class="sidebar-menu">
+            <ul>
+                <li><a href="{% url 'accounts:manage_students' %}"><i class="fas fa-users"></i><span>Manage Students</span></a></li>
+                <li><a href="{% url 'accounts:manage_course_approvals' %}"><i class="fas fa-book"></i><span>Manage Courses</span></a></li>
+                <li><a href="{% url 'accounts:admin_course_transfer_requests' %}"><i class="fas fa-exchange-alt"></i><span>Course Transfer</span></a></li>
+                <li><a href="{% url 'accounts:manage_bookings' %}"><i class="fas fa-money-bill"></i><span>Manage Bookings</span></a></li>
+                <li><a href="{% url 'accounts:admin_ticket_list' %}"><i class="fas fa-chart-bar"></i><span>Admin Tickets</span></a></li>
+                <li><a href="{% url 'accounts:logout' %}"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-title">Admin Dashboard</div>
+            <div class="header-actions">
+                <div class="action-btn action-dropdown">
+                    <div class="dropdown-content">
+                        <a href="{% url 'accounts:logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-container">
+            <!-- Welcome Message -->
+            <div class="card full-width">
+                <div class="user-info">
+                    <div class="user-avatar">AD</div>
+                    <div>
+                        <h2>Welcome, Admin!</h2>
+                        <p>Please Observe Integrity</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manage Students -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Manage Students</div>
+                    <div class="card-icon profile-icon"><i class="fas fa-users"></i></div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td>{{ student.username }}</td>
+                            <td>{{ student.first_name }}</td>
+                            <td>{{ student.last_name }}</td>
+                            <td>{{ student.email }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Manage Courses -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Manage Courses</div>
+                    <div class="card-icon course-icon"><i class="fas fa-book"></i></div>
+                </div>
+                <ul>
+                    {% for course in courses %}
+                    <li>{{ course.course_name }} ({{ course.course_code }})</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Manage Payments -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Payment Analytics</div>
+                    <div class="card-icon payment-icon"><i class="fas fa-money-bill"></i></div>
+                </div>
+                <ul>
+                    {% for payment in payments %}
+                    <li>{{ payment.student.username }} - {{ payment.payment_type }}: KES {{ payment.amount }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple script to adjust layout based on screen size
+        window.addEventListener('resize', function() {
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+            
+            if (window.innerWidth <= 768) {
+                sidebar.style.width = '70px';
+                mainContent.style.marginLeft = '70px';
+            } else {
+                sidebar.style.width = '250px';
+                mainContent.style.marginLeft = '250px';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Admission Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <!-- Sidebar -->
+    <div class="fixed inset-y-0 left-0 w-64 bg-blue-900 text-white">
+        <div class="p-6 text-center">
+            <div class="text-2xl font-bold">ADMIN</div>
+        </div>
+        <ul class="mt-6">
+            <li class="px-6 py-3 hover:bg-blue-800">
+                <a href="#" class="flex items-center">
+                    <i class="fas fa-university mr-3"></i>
+                    <span>Admission Management</span>
+                </a>
+            </li>
+            <li class="px-6 py-3 hover:bg-blue-800">
+                <a href="#" class="flex items-center">
+                    <i class="fas fa-users mr-3"></i>
+                    <span>Manage Students</span>
+                </a>
+            </li>
+            <li class="px-6 py-3 hover:bg-blue-800">
+                <a href="#" class="flex items-center">
+                    <i class="fas fa-sign-out-alt mr-3"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="ml-64 p-8">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8">
+            <div class="text-2xl font-bold">Admission Management</div>
+            <div class="flex items-center">
+                <div class="relative mr-6">
+                    <i class="fas fa-bell text-gray-600"></i>
+                    <span class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-1">2</span>
+                </div>
+                <div class="relative">
+                    <i class="fas fa-user text-gray-600"></i>
+                    <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg hidden">
+                        <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Download Admission Report -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <div class="text-xl font-semibold">Admission Reports</div>
+                <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-file-download text-white"></i>
+                </div>
+            </div>
+            <a href="{% url 'accounts:generate_admission_report' %}" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+                <i class="fas fa-download mr-2"></i>Download Admission Report
+            </a>
+        </div>
+
+        <!-- Student Documents Table -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex justify-between items-center mb-4">
+                <div class="text-xl font-semibold">Student Documents</div>
+                <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-file-alt text-white"></i>
+                </div>
+            </div>
+            <table class="w-full">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="px-4 py-2 text-left">Username</th>
+                        <th class="px-4 py-2 text-left">ID Document</th>
+                        <th class="px-4 py-2 text-left">Transcript</th>
+                        <th class="px-4 py-2 text-left">Proof of Payment</th>
+                        <th class="px-4 py-2 text-left">Status</th>
+                        <th class="px-4 py-2 text-left">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr class="border-b">
+                        <td class="px-4 py-3">{{ user.username }}</td>
+                        <td class="px-4 py-3">
+                            {% if user.id_document %}
+                                <a href="{{ user.id_document.url }}" class="text-blue-500 hover:underline">View</a>
+                            {% else %}
+                                Not Uploaded
+                            {% endif %}
+                        </td>
+                        <td class="px-4 py-3">
+                            {% if user.transcript %}
+                                <a href="{{ user.transcript.url }}" class="text-blue-500 hover:underline">View</a>
+                            {% else %}
+                                Not Uploaded
+                            {% endif %}
+                        </td>
+                        <td class="px-4 py-3">
+                            {% if user.proof_of_payment %}
+                                <a href="{{ user.proof_of_payment.url }}" class="text-blue-500 hover:underline">View</a>
+                            {% else %}
+                                Not Uploaded
+                            {% endif %}
+                        </td>
+                        <td class="px-4 py-3 text-blue-500">{{ user.admission_status }}</td>
+                        <td class="px-4 py-3">
+                            <button class="bg-yellow-500 text-white px-3 py-1 rounded-lg hover:bg-yellow-600" onclick="updateStatus('{{ user.id }}', 'Pending')">Pending</button>
+                            <button class="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600" onclick="updateStatus('{{ user.id }}', 'In Review')">In Review</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Update Admission Status
+        function updateStatus(userId, status) {
+            fetch(`/update_admission_status/${userId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                body: `admission_status=${status}`,
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                window.location.reload();
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>

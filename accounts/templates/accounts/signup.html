@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js" integrity="sha384-ZlNfprpvqAsOQvZoVxyBxXHHUX6Sv+/h+3dT1Wj5E3Z0QVoYqVw37uxgDdyLlIXh" crossorigin="anonymous"></script>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-96">
+        
+        <h2 class="text-2xl font-semibold text-center text-gray-700 mb-4"><i class="fas fa-user-plus text-green-500"></i> Sign Up</h2>
+        {% if error_message %}
+            <div class="text-red-500 text-center mb-4">{{ error_message }}</div>
+        {% endif %}
+        <form method="post" class="space-y-4" onsubmit="return validatePassword()">
+            {% csrf_token %}
+            <div class="relative">
+                <i class="fas fa-user absolute left-3 top-3 text-gray-400"></i>
+                <input type="text" name="username" placeholder="Username" required 
+                    class="w-full pl-10 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+            </div>
+            <div class="relative">
+                <i class="fas fa-envelope absolute left-3 top-3 text-gray-400"></i>
+                <input type="email" name="email" placeholder="Email" required 
+                    class="w-full pl-10 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+            </div>
+            <div class="relative">
+                <i class="fas fa-lock absolute left-3 top-3 text-gray-400"></i>
+                <input type="password" id="password" name="password" placeholder="Password" required 
+                    class="w-full pl-10 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+            </div>
+            <div class="relative">
+                <i class="fas fa-lock absolute left-3 top-3 text-gray-400"></i>
+                <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password" required 
+                    class="w-full pl-10 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+            </div>
+            <div id="password-error" class="text-red-500 text-center hidden">Passwords do not match</div>
+            <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-md transition">
+                <i class="fas fa-user-check"></i> Sign Up
+            </button>
+        </form>
+        <div class="text-center mt-4">
+            <a href="{% url 'accounts:login' %}" class="text-gray-600 hover:text-gray-800">
+                <i class="fas fa-arrow-left"></i> Already have an account? Login
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        function validatePassword() {
+            var password = document.getElementById("password").value;
+            var confirmPassword = document.getElementById("confirm_password").value;
+            var errorDiv = document.getElementById("password-error");
+            
+            if (password !== confirmPassword) {
+                errorDiv.classList.remove("hidden");
+                return false;
+            } else {
+                errorDiv.classList.add("hidden");
+                return true;
+            }
+        }
+    </script>
+</body>
+</html>

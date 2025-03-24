@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #1e293b;
+            color: #fff;
+            height: 100vh;
+            position: fixed;
+            transition: all 0.3s;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #2c3e50;
+        }
+
+        .sidebar-logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .sidebar-menu {
+            padding: 15px 0;
+        }
+
+        .sidebar-menu ul {
+            list-style: none;
+        }
+
+        .sidebar-menu ul li {
+            padding: 10px 25px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .sidebar-menu ul li:hover {
+            background: #2c3e50;
+            border-left: 4px solid #3498db;
+        }
+
+        .sidebar-menu ul li i {
+            margin-right: 10px;
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .sidebar-menu ul li span {
+            font-size: 15px;
+            color: white;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            transition: all 0.3s;
+        }
+
+        /* Header */
+        .header {
+            background: #ffffff;
+            height: 70px;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            background: #e2e8f0;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 18px;
+            height: 18px;
+            background: #e74c3c;
+            color: #fff;
+            border-radius: 50%;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Ticket Details Container */
+        .ticket-details-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .ticket-details-container h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .ticket-details-container p {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .ticket-details-container p strong {
+            color: #333;
+        }
+
+        /* Responses Section */
+        .responses-section {
+            margin-top: 20px;
+        }
+
+        .responses-section h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .response-item {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .response-item p {
+            margin: 5px 0;
+        }
+
+        .response-item .responder {
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        .response-item .timestamp {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Back Button */
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #45a049;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+                overflow: hidden;
+            }
+
+            .sidebar-logo {
+                font-size: 20px;
+            }
+
+            .sidebar-menu ul li span {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">EDU</div>
+        </div>
+        <div class="sidebar-menu">
+            <ul>
+                <li>
+                    <a href="{% url 'accounts:dashboard' %}">
+                        <i class="fas fa-user-edit"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:edit_profile' %}">
+                        <i class="fas fa-user-edit"></i>
+                        <span>Update Profile</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:course_enrollment' %}">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Course Enrollment</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:course_transfer' %}">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Course Transfer</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:submit_ticket' %}">
+                        <i class="fas fa-headset"></i>
+                        <span>Helpdesk</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:book_student_id' %}">
+                        <i class="fas fa-id-card"></i>
+                        <span>Book Student ID</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:fees_payment_details' %}">
+                        <i class="fas fa-money-bill"></i>
+                        <span>Fees Payment</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:logout' %}">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-title">Ticket Details</div>
+            <div class="header-actions">
+                <div class="action-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">2</span>
+                </div>
+                <div class="action-btn action-dropdown">
+                    <i class="fas fa-user"></i>
+                    <div class="dropdown-content">
+                        <a href="{% url 'accounts:logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ticket Details Container -->
+        <div class="ticket-details-container">
+            <h2><i class="fas fa-ticket-alt"></i> Ticket Details</h2>
+            <p><strong>Subject:</strong> {{ ticket.subject }}</p>
+            <p><strong>Description:</strong> {{ ticket.description }}</p>
+            <p><strong>Status:</strong> {{ ticket.get_status_display }}</p>
+            <p><strong>Submitted On:</strong> {{ ticket.created_at|date:"F d, Y H:i" }}</p>
+
+            <!-- Feedback Section -->
+            {% if ticket.feedback %}
+            <div class="feedback-section">
+                <h3>Feedback</h3>
+                <p>{{ ticket.feedback }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Responses Section -->
+            <div class="responses-section">
+                <h3>Responses</h3>
+                {% if responses %}
+                    {% for response in responses %}
+                    <div class="response-item">
+                        <p class="responder">{{ response.responder.username }}</p>
+                        <p>{{ response.message }}</p>
+                        <p class="timestamp">{{ response.timestamp|date:"F d, Y H:i" }}</p>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No responses yet.</p>
+                {% endif %}
+            </div>
+
+            <!-- Back Button -->
+            <a href="{% url 'accounts:submit_ticket' %}" class="back-button">
+                <i class="fas fa-arrow-left"></i> Back to Tickets
+            </a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Admission Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <!-- Sidebar -->
+    <div class="fixed inset-y-0 left-0 w-64 bg-blue-900 text-white">
+        <div class="p-6 text-center">
+            <div class="text-2xl font-bold">STUDENT</div>
+        </div>
+        <ul class="mt-6">
+            <li class="px-6 py-3 hover:bg-blue-800">
+                <a href="#" class="flex items-center">
+                    <i class="fas fa-university mr-3"></i>
+                    <span>Admission Management</span>
+                </a>
+            </li>
+            <li class="px-6 py-3 hover:bg-blue-800">
+                <a href="#" class="flex items-center">
+                    <i class="fas fa-tachometer-alt mr-3"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="px-6 py-3 hover:bg-blue-800">
+                <a href="#" class="flex items-center">
+                    <i class="fas fa-user-edit mr-3"></i>
+                    <span>Edit Profile</span>
+                </a>
+            </li>
+            <li class="px-6 py-3 hover:bg-blue-800">
+                <a href="#" class="flex items-center">
+                    <i class="fas fa-sign-out-alt mr-3"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="ml-64 p-8">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8">
+            <div class="text-2xl font-bold">Admission Management</div>
+            <div class="flex items-center">
+                <div class="relative mr-6">
+                    <i class="fas fa-bell text-gray-600"></i>
+                    <span class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-1">1</span>
+                </div>
+                <div class="relative">
+                    <i class="fas fa-user text-gray-600"></i>
+                    <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg hidden">
+                        <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admission Status -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <div class="text-xl font-semibold">Admission Status</div>
+                <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-university text-white"></i>
+                </div>
+            </div>
+            <p class="text-gray-700 mb-2"><strong>Status:</strong> <span id="admission-status" class="text-blue-500">{{ admission_status }}</span></p>
+            <p class="text-gray-600">Please upload the required documents below. Your admission status will be updated once the documents are reviewed.</p>
+        </div>
+
+        <!-- Upload Documents -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <div class="text-xl font-semibold">Upload Required Documents</div>
+                <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-upload text-white"></i>
+                </div>
+            </div>
+            <div class="space-y-4">
+                <!-- ID Document -->
+                <div>
+                    <label class="block text-gray-700 mb-2">ID Document</label>
+                    <div class="flex items-center">
+                        <input type="file" id="id_document" class="hidden">
+                        <label for="id_document" class="bg-blue-500 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-600">
+                            <i class="fas fa-upload mr-2"></i>Upload
+                        </label>
+                        <span id="id-document-status" class="ml-4 text-gray-600">{{ id_document.name|default:"No file uploaded" }}</span>
+                    </div>
+                </div>
+                <!-- Transcript -->
+                <div>
+                    <label class="block text-gray-700 mb-2">Transcript</label>
+                    <div class="flex items-center">
+                        <input type="file" id="transcript" class="hidden">
+                        <label for="transcript" class="bg-blue-500 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-600">
+                            <i class="fas fa-upload mr-2"></i>Upload
+                        </label>
+                        <span id="transcript-status" class="ml-4 text-gray-600">{{ transcript.name|default:"No file uploaded" }}</span>
+                    </div>
+                </div>
+                <!-- Proof of Payment -->
+                <div>
+                    <label class="block text-gray-700 mb-2">Proof of Payment</label>
+                    <div class="flex items-center">
+                        <input type="file" id="proof_of_payment" class="hidden">
+                        <label for="proof_of_payment" class="bg-blue-500 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-600">
+                            <i class="fas fa-upload mr-2"></i>Upload
+                        </label>
+                        <span id="proof-of-payment-status" class="ml-4 text-gray-600">{{ proof_of_payment.name|default:"No file uploaded" }}</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Submit Button -->
+            <div class="mt-6">
+                <button id="submit-documents" class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600">
+                    <i class="fas fa-paper-plane mr-2"></i>Submit Documents
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Handle File Uploads
+        document.getElementById('id_document').addEventListener('change', function (e) {
+            document.getElementById('id-document-status').textContent = e.target.files[0]?.name || "No file uploaded";
+        });
+
+        document.getElementById('transcript').addEventListener('change', function (e) {
+            document.getElementById('transcript-status').textContent = e.target.files[0]?.name || "No file uploaded";
+        });
+
+        document.getElementById('proof_of_payment').addEventListener('change', function (e) {
+            document.getElementById('proof-of-payment-status').textContent = e.target.files[0]?.name || "No file uploaded";
+        });
+
+        // Handle Document Submission
+        document.getElementById('submit-documents').addEventListener('click', function () {
+            const idDocument = document.getElementById('id_document').files[0];
+            const transcript = document.getElementById('transcript').files[0];
+            const proofOfPayment = document.getElementById('proof_of_payment').files[0];
+
+            const formData = new FormData();
+            if (idDocument) formData.append('id_document', idDocument);
+            if (transcript) formData.append('transcript', transcript);
+            if (proofOfPayment) formData.append('proof_of_payment', proofOfPayment);
+
+            fetch('/upload_documents/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                if (data.status === 'success') {
+                    window.location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to submit documents. Please try again.');
+            });
+        });
+
+        // Fetch Admission Status Dynamically
+        function fetchAdmissionStatus() {
+            fetch("/fetch_admission_status/")
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('admission-status').textContent = data.status;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Poll for status updates every 5 seconds
+        setInterval(fetchAdmissionStatus, 5000);
+    </script>
+</body>
+</html>

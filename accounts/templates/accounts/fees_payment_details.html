@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fees Payment Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #1e293b;
+            color: #fff;
+            height: 100vh;
+            position: fixed;
+            transition: all 0.3s;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #2c3e50;
+        }
+
+        .sidebar-logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .sidebar-menu {
+            padding: 15px 0;
+        }
+
+        .sidebar-menu ul {
+            list-style: none;
+        }
+
+        .sidebar-menu ul li {
+            padding: 10px 25px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .sidebar-menu ul li:hover {
+            background: #2c3e50;
+            border-left: 4px solid #3498db;
+        }
+
+        .sidebar-menu ul li i {
+            margin-right: 10px;
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .sidebar-menu ul li span {
+            font-size: 15px;
+            color: white;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            transition: all 0.3s;
+        }
+
+        /* Header */
+        .header {
+            background: #ffffff;
+            height: 70px;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            background: #e2e8f0;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 18px;
+            height: 18px;
+            background: #e74c3c;
+            color: #fff;
+            border-radius: 50%;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Fees Payment Details Container */
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 50px auto;
+        }
+
+        .container h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        /* Section Styles */
+        .section {
+            margin-bottom: 25px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .section h2 {
+            font-size: 20px;
+            color: #4CAF50;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+
+        .section p {
+            margin: 10px 0;
+            font-size: 16px;
+            color: #555;
+        }
+
+        .section p strong {
+            color: #333;
+        }
+
+        /* Button Styles */
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .buttons button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .buttons button:hover {
+            background-color: #45a049;
+        }
+
+        .buttons button.download {
+            background-color: #2196F3;
+        }
+
+        .buttons button.download:hover {
+            background-color: #1e88e5;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+                overflow: hidden;
+            }
+
+            .sidebar-logo {
+                font-size: 20px;
+            }
+
+            .sidebar-menu ul li span {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 70px;
+            }
+
+            .buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .buttons button {
+                width: 100%;
+            }
+        }
+    </style>
+    <!-- Include jsPDF Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Include jsPDF AutoTable Plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">EDU</div>
+        </div>
+        <div class="sidebar-menu">
+            <ul>
+                <li>
+                    <a href="{% url 'accounts:dashboard' %}">
+                        <i class="fas fa-user-edit"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:edit_profile' %}">
+                        <i class="fas fa-user-edit"></i>
+                        <span>Update Profile</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:course_enrollment' %}">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Course Enrollment</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:course_transfer' %}">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Course Transfer</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:submit_ticket' %}">
+                        <i class="fas fa-headset"></i>
+                        <span>Helpdesk</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:book_student_id' %}">
+                        <i class="fas fa-id-card"></i>
+                        <span>Book Student ID</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:fees_payment_details' %}">
+                        <i class="fas fa-money-bill"></i>
+                        <span>Fees Payment</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:logout' %}">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-title">Fees Payment Details</div>
+            <div class="header-actions">
+                <div class="action-btn action-dropdown">
+                    <i class="fas fa-user"></i>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Fees Payment Details Container -->
+        <div class="container">
+            <h1>Fees Payment Details</h1>
+
+            <!-- Student Information -->
+            <div class="section">
+                <h2>Student Information</h2>
+                <p><strong>Username:</strong> {{ username }}</p>
+                <p><strong>Email:</strong> {{ email }}</p>
+                <p><strong>Course Enrolled:</strong> {{ course_enrolled }}</p>
+                <p><strong>Academic Year/Semester:</strong> {{ academic_year }}</p>
+            </div>
+
+            <!-- Fee Breakdown -->
+            <div class="section">
+                <h2>Fee Breakdown</h2>
+                <p><strong>Tuition Fees:</strong> KES {{ tuition_fees }}</p>
+                <p><strong>Library Fees:</strong> KES {{ library_fees }}</p>
+                <p><strong>Laboratory Fees:</strong> KES {{ laboratory_fees }}</p>
+                <p><strong>Hostel Fees:</strong> KES {{ hostel_fees }}</p>
+                <p><strong>Examination Fees:</strong> KES {{ examination_fees }}</p>
+                <p><strong>Medical Fees:</strong> KES {{ medical_fees }}</p>
+                <p><strong>Other Charges:</strong> KES {{ other_charges }}</p>
+                <p><strong>Total Amount Due:</strong> KES {{ total_amount }}</p>
+            </div>
+
+            <!-- Buttons -->
+            <div class="buttons">
+                <button onclick="window.location.href='{% url 'accounts:initiate_fees_payment' %}'">Proceed to Payment</button>
+                <button class="download" onclick="downloadFeeStructure()">Download Fee Structure (PDF)</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function downloadFeeStructure() {
+            // Initialize jsPDF
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Set document properties
+            doc.setProperties({
+                title: 'Fee Structure',
+                subject: 'Fee Breakdown for {{ username }}',
+                author: 'University'
+            });
+
+            // Add a header
+            doc.setFontSize(18);
+            doc.setTextColor(40);
+            doc.setFont("helvetica", "bold");
+            doc.text("University", 105, 20, { align: 'center' });
+            doc.setFontSize(12);
+            doc.setTextColor(100);
+            doc.text("Fee Structure", 105, 28, { align: 'center' });
+
+            // Add a horizontal line below the header
+            doc.setDrawColor(200);
+            doc.line(20, 32, 190, 32);
+
+            // Add student information
+            doc.setFontSize(12);
+            doc.setTextColor(40);
+            doc.setFont("helvetica", "normal");
+            doc.text("Student Information:", 20, 40);
+            doc.text(`Username: {{ username }}`, 20, 48);
+            doc.text(`Email: {{ email }}`, 20, 56);
+            doc.text(`Course Enrolled: {{ course_enrolled }}`, 20, 64);
+            doc.text(`Academic Year/Semester: {{ academic_year }}`, 20, 72);
+
+            // Add a table for fee breakdown
+            const fees = [
+                ["Tuition Fees", "KES {{ tuition_fees }}"],
+                ["Library Fees", "KES {{ library_fees }}"],
+                ["Laboratory Fees", "KES {{ laboratory_fees }}"],
+                ["Hostel Fees", "KES {{ hostel_fees }}"],
+                ["Examination Fees", "KES {{ examination_fees }}"],
+                ["Medical Fees", "KES {{ medical_fees }}"],
+                ["Other Charges", "KES {{ other_charges }}"],
+                ["Total Amount Due", "KES {{ total_amount }}"]
+            ];
+
+            doc.autoTable({
+                startY: 80,
+                head: [['Fee Type', 'Amount']],
+                body: fees,
+                theme: 'striped',
+                headStyles: { fillColor: [50, 50, 50], textColor: [255, 255, 255], fontStyle: 'bold' },
+                columnStyles: { 0: { cellWidth: 120 }, 1: { cellWidth: 60 } },
+                margin: { left: 20 }
+            });
+
+            // Add a footer
+            const pageCount = doc.internal.getNumberOfPages();
+            for (let i = 1; i <= pageCount; i++) {
+                doc.setPage(i);
+                doc.setFontSize(10);
+                doc.setTextColor(100);
+                doc.text(`Page ${i} of ${pageCount}`, 105, 285, { align: 'center' });
+                doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 105, 290, { align: 'center' });
+            }
+
+            // Save the PDF
+            doc.save('fee_structure.pdf');
+        }
+    </script>
+</body>
+</html>

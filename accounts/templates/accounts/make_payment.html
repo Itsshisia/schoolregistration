@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make Payment</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+        .action-dropdown {
+    position: relative;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 5px;
+}
+.action-dropdown:hover .dropdown-content {
+    display: block;
+}
+
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #1e293b;
+            color: #fff;
+            height: 100vh;
+            position: fixed;
+            transition: all 0.3s;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #2c3e50;
+        }
+
+        .sidebar-logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .sidebar-menu {
+            padding: 15px 0;
+        }
+
+        .sidebar-menu ul {
+            list-style: none;
+        }
+
+        .sidebar-menu ul li {
+            padding: 10px 25px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .sidebar-menu ul li:hover {
+            background: #2c3e50;
+            border-left: 4px solid #3498db;
+        }
+
+        .sidebar-menu ul li i {
+            margin-right: 10px;
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .sidebar-menu ul li span {
+            font-size: 15px;
+            color: white;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            transition: all 0.3s;
+        }
+
+        /* Header */
+        .header {
+            background: #ffffff;
+            height: 70px;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            background: #e2e8f0;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 18px;
+            height: 18px;
+            background: #e74c3c;
+            color: #fff;
+            border-radius: 50%;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Card Styles */
+        .card {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .card-icon {
+            font-size: 24px;
+            color: #4CAF50;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .form-group button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .form-group button:hover {
+            background-color: #45a049;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+                overflow: hidden;
+            }
+
+            .sidebar-logo {
+                font-size: 20px;
+            }
+
+            .sidebar-menu ul li span {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">EDU</div>
+        </div>
+        <div class="sidebar-menu">
+            <ul>
+                <li>
+                    <a href="{% url 'accounts:dashboard' %}">
+                        <i class="fas fa-user-edit"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:edit_profile' %}">
+                        <i class="fas fa-user-edit"></i>
+                        <span>Update Profile</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:course_enrollment' %}">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Course Enrollment</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:course_transfer' %}">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Course Transfer</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:submit_ticket' %}">
+                        <i class="fas fa-headset"></i>
+                        <span>Helpdesk</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:book_student_id' %}">
+                        <i class="fas fa-id-card"></i>
+                        <span>Book Student ID</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:fees_payment_details' %}">
+                        <i class="fas fa-money-bill"></i>
+                        <span>Fees Payment</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:logout' %}">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-title">Make Payment</div>
+            <div class="header-actions">
+                <div class="action-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">1</span>
+                </div>
+                <div class="action-btn action-dropdown">
+                    <i class="fas fa-user"></i>
+                    <div class="dropdown-content">
+                        <a href="{% url 'accounts:logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Content -->
+        <div class="dashboard-container">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Make Payment</div>
+                    <div class="card-icon"><i class="fas fa-credit-card"></i></div>
+                </div>
+                <form id="payment-form">
+                    <div class="form-group">
+                        <label for="phone-number">Phone Number</label>
+                        <input type="text" id="phone-number" name="phone-number" placeholder="Enter your phone number (e.g., 2547XXXXXXXX or 07XXXXXXXX)" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" id="pay-button"><i class="fas fa-money-bill-wave"></i> Pay KES 1000</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple script to adjust layout based on screen size
+        window.addEventListener('resize', function() {
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+            
+            if (window.innerWidth <= 768) {
+                sidebar.style.width = '70px';
+                mainContent.style.marginLeft = '70px';
+            } else {
+                sidebar.style.width = '250px';
+                mainContent.style.marginLeft = '250px';
+            }
+        });
+
+        // Handle payment form submission
+        document.getElementById('payment-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const phoneNumber = document.getElementById('phone-number').value.trim();
+
+            // Validate phone number format
+            const phoneRegex = /^(254|07|01)\d{8}$/;
+            if (!phoneRegex.test(phoneNumber)) {
+                alert('Invalid phone number format. Please use 254, 07, or 01 followed by 8 digits.');
+                return;
+            }
+
+            // Convert phone number to 254 format if it starts with 07 or 01
+            let formattedPhoneNumber = phoneNumber;
+            if (phoneNumber.startsWith('07') || phoneNumber.startsWith('01')) {
+                formattedPhoneNumber = '254' + phoneNumber.slice(1);
+            }
+
+            fetch('{% url "accounts:pay_fee" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    phone_number: formattedPhoneNumber,
+                    amount: 1000
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Payment initiated successfully. Please check your phone to complete the payment.');
+                } else {
+                    alert('Failed to initiate payment. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
+        });
+    </script>
+</body>
+</html>
